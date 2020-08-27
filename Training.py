@@ -20,14 +20,17 @@ images = []
 steer = []
 for data in train_data:
     images.append(data[0])
+    flip_image = np.fliplr(data[0])
+    images.append(flip_image)
     steer.append(data[1])
+    steer.append(-data[1])
 
 X_train = np.array(images)
 print(len(X_train))
 y_train = np.array(steer)
 
 epochs = 10
-batch_size = 100
+batch_size = 200
 input_size = 64
 activation_relu = 'relu'
 
@@ -61,3 +64,5 @@ print('training complete')
 model.save('Test_model.h5')
 print()
 print('model saved')
+
+
