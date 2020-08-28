@@ -8,10 +8,9 @@ from DNN_model import vgg_16
 from directkeys import PressKey, ReleaseKey, W, A, D
 import time
 
-t_time = 0.09
+t_time = 0.05
 pause = False
 prev_time = time.time()
-
 
 def left():
     PressKey(W)
@@ -45,21 +44,21 @@ for i in range(0, 4):
 while True:
     if not pause:
         screen = grab_screen(region=(0, 35, 800, 630))
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
+        wawdscreen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
         new_img = screen/255 - 0.1
         new_img = cv2.resize(new_img, (400, 300))
-        cv2.imshow('screen', new_img)
+        # cv2.imshow('screen', new_img)
         steering_angle = float(model.predict(new_img[None, :, :, :], batch_size=1))
         key_press = 0
-        if steering_angle < 1:
+        if steering_angle < -0.05:
             key_press = "A"
-        elif steering_angle > -1:
+        elif steering_angle > 0.05:
             key_press = "D"
         else:
             key_press = "W"
         print("==================")
         print(steering_angle)
-        print(key_press)
+        # print(key_press)
         if key_press == "A":
             left()
         elif key_press == "D":
@@ -68,7 +67,7 @@ while True:
             straight()
         curr_time = time.time()
         FPS = 1/(curr_time - prev_time)
-        print("FPS:", FPS)
+        # print("FPS:", FPS)
         prev_time = time.time()
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
