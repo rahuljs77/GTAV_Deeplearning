@@ -19,18 +19,22 @@ train_data = np.load('training_data.npy', allow_pickle=True)
 images = []
 steer = []
 for data in train_data:
-    images.append(data[0])
-    flip_image = np.fliplr(data[0])
+    source_image = data[0]
+    print(source_image.shape)
+    new_image = cv2.cvtColor(source_image, cv2.COLOR_RGB2YUV)
+    images.append(new_image)
+    flip_image = np.fliplr(new_image)
     images.append(flip_image)
-    steer.append(data[1])
-    steer.append(-data[1])
+    steering_angle = data[1]/100
+    steer.append(steering_angle)
+    steer.append(-steering_angle)
 
 X_train = np.array(images)
 print(len(X_train))
 y_train = np.array(steer)
 
-epochs = 10
-batch_size = 200
+epochs = 7
+batch_size = 100
 input_size = 64
 activation_relu = 'relu'
 
