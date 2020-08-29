@@ -44,7 +44,7 @@ for i in range(0, 4):
 while True:
     if not pause:
         screen = grab_screen(region=(0, 35, 800, 630))
-        wawdscreen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
         new_img = screen/255 - 0.1
         new_img = cv2.resize(new_img, (400, 300))
         # cv2.imshow('screen', new_img)
