@@ -7,25 +7,28 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 import tensorflow as tf
-import sklearn
+from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from math import ceil
 from random import shuffle
 import matplotlib.pyplot as plt
 import cv2
-
+fpv = False
 allow_pickle = True
-train_data = np.load('training_data.npy', allow_pickle=True)
+if fpv:
+    train_data = np.load('fpv_data.npy', allow_pickle=True)
+else:
+    train_data = np.load('3pv_data.npy', allow_pickle=True)
 images = []
 steer = []
 for data in train_data:
     source_image = data[0]
-    print(source_image.shape)
-    new_image = cv2.cvtColor(source_image, cv2.COLOR_RGB2YUV)
+    # print(source_image.shape)
+    new_image = source_image
     images.append(new_image)
     flip_image = np.fliplr(new_image)
     images.append(flip_image)
-    steering_angle = data[1]/100
+    steering_angle = data[1]
     steer.append(steering_angle)
     steer.append(-steering_angle)
 
@@ -33,19 +36,20 @@ X_train = np.array(images)
 print(len(X_train))
 y_train = np.array(steer)
 
-epochs = 7
-batch_size = 100
-input_size = 64
+# X_train, y_train = shuffle(X_train, y_train)
+
+epochs = 5
+batch_size = 250
+# input_size = 64
 activation_relu = 'relu'
 
-vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(66, 200, 3))
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 3))
 for layer in vgg_model.layers:
     layer.trainable = False
 
-data_input = Input(shape=(300, 400, 3))
-resize_input = Lambda(lambda image: tf.image.resize(image, (66, 200)))(data_input)
-vgg = vgg_model(resize_input)
-# vgg = vgg_model(data_input)
+data_input = Input(shape=(100, 100, 3))
+# resize_input = Lambda(lambda image: tf.image.resize(image, (66, 200)))(data_input)
+vgg = vgg_model(data_input)
 drop_1 = Dropout(0.2)(vgg)
 flat_1 = Flatten()(drop_1)
 dense = Dense(512, activation='relu')(flat_1)
@@ -65,7 +69,7 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('Test_model.h5')
+model.save('3pv_model.h5')
 print()
 print('model saved')
 
