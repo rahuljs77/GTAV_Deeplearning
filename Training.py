@@ -26,11 +26,11 @@ for data in train_data:
     # print(source_image.shape)
     new_image = source_image
     images.append(new_image)
-    flip_image = np.fliplr(new_image)
-    images.append(flip_image)
+    # flip_image = np.fliplr(new_image)
+    # images.append(flip_image)
     steering_angle = data[1]
     steer.append(steering_angle)
-    steer.append(-steering_angle)
+    # steer.append(-steering_angle)
 
 X_train = np.array(images)
 print(len(X_train))
@@ -69,7 +69,7 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('3pv_model.h5')
+model.save('3pv_model2.h5')
 print()
 print('model saved')
 
