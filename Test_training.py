@@ -6,7 +6,25 @@ import cv2
 from grabscreen import grab_screen
 from DNN_model import vgg_16
 from directkeys import PressKey, ReleaseKey, W, A, D
+from vjoy import vJoy, test, ultimate_release
 import time
+from getKeys import key_check
+
+gain = 20
+vj = vJoy()
+# JOYSTICK INPUT
+x_range = 16393
+z_range = 32786
+
+wAxisX = 16393
+wAxisY = 16393
+wAxisZ = 0
+wAxisXRot = 16393
+wAxisYRot = 16393
+wAxisZRot = 0
+
+keys = key_check()
+ultimate_release()
 
 t_time = 0.05
 pause = False
@@ -34,7 +52,7 @@ def straight():
     ReleaseKey(D)
 
 
-model = load_model("Test_model.h5")
+model = load_model("3pv_model.h5")
 print("code starts in..")
 time.sleep(0.5)
 for i in range(0, 4):
@@ -43,31 +61,27 @@ for i in range(0, 4):
     time.sleep(1)
 while True:
     if not pause:
-        screen = grab_screen(region=(0, 35, 800, 630))
+        vj.open()
+        btn = 1
+        screen = grab_screen(region=(0, 280, 800, 430))
+        screen = cv2.resize(screen, (100, 100))
+        # cv2.imshow('screen', screen)
+        # screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
         screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
-        new_img = screen/255 - 0.1
-        new_img = cv2.resize(new_img, (400, 300))
-        # cv2.imshow('screen', new_img)
-        steering_angle = float(model.predict(new_img[None, :, :, :], batch_size=1))
-        key_press = 0
-        if steering_angle < -0.05:
-            key_press = "A"
-        elif steering_angle > 0.05:
-            key_press = "D"
-        else:
-            key_press = "W"
-        print("==================")
-        print(steering_angle)
-        # print(key_press)
-        if key_press == "A":
-            left()
-        elif key_press == "D":
-            right()
-        else:
-            straight()
+        screen = (screen / 255 - 0.2)
+
+        # steering_angle = float(model.predict(screen[None, :, :, :], batch_size=1))
+        # steering_correction = int(steering_angle * 16000) * gain
+        # print(steering_correction)
+
+        joystickPosition = vj.generateJoystickPosition(wAxisZ=22000)
+        vj.update(joystickPosition)
+        time.sleep(0.01)
+        vj.sendButtons(0)
+
         curr_time = time.time()
         FPS = 1/(curr_time - prev_time)
-        # print("FPS:", FPS)
+        print("FPS:", FPS)
         prev_time = time.time()
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -76,14 +90,20 @@ while True:
 
     keys = key_check()
     if 'T' in keys:
-        if pause:
-            pause = False
-            print('Unpaused!')
-            time.sleep(1)
-        else:
-            print('Pausing!')
-            pause = True
-            time.sleep(1)
+        # if pause:
+        #     pause = False
+        #     print('Unpaused!')
+        #     time.sleep(1)
+        # else:
+        #     print('Pausing!')
+        #     pause = True
+        #     time.sleep(1)
+        joystickPosition = vj.generateJoystickPosition(wAxisX=16000, wAxisY=16000)
+        vj.update(joystickPosition)
+        vj.sendButtons(0)
+        # ultimate_release()
+        vj.close()
+        break
 
 
 
