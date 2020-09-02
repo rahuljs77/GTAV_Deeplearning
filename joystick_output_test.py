@@ -2,6 +2,10 @@ from vjoy import vJoy, test, ultimate_release
 import numpy as np
 import time
 from getKeys import key_check
+from grabscreen import grab_screen
+from tensorflow.keras.models import load_model
+import cv2
+gain = 15
 vj = vJoy()
 
 
@@ -19,25 +23,27 @@ throttle = 0
 turn = 0.9
 keys = key_check()
 ultimate_release()
-xPos = -16000
+xPos = 0
 yPos = 16000
+model = load_model("3pv_model.h5")
 while True:
     vj.open()
     btn = 1
-    joystickPosition = vj.generateJoystickPosition(wAxisX=16000 - xPos, wAxisZ=32000)
+    screen = grab_screen(region=(0, 280, 800, 430))
+    screen = cv2.resize(screen, (100, 100))
+    # cv2.imshow('screen', screen)
+    # screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
+    screen = (screen / 255 - 0.2)
+    steering_angle = float(model.predict(screen[None, :, :, :], batch_size=1))
+    steering_correction = int(steering_angle * 16000) * gain
+
+    joystickPosition = vj.generateJoystickPosition(wAxisX=16000 + steering_correction, wAxisZ=16000)
     vj.update(joystickPosition)
     print("running")
-    time.sleep(0.01)
+    time.sleep(0.1)
     vj.sendButtons(0)
 
-    # test()
-    # vj.open()
-    # joystickPosition = vj.generateJoystickPosition(wAxisZ=int(z_range*throttle), wAxisX=int(x_range + (turn*x_range)))
-    # # joystickPosition = vj.generateJoystickPosition(wAxisX=int(x_range + (turn*x_range)))
-    # print("running")
-    # vj.update(joystickPosition)
-    # time.sleep(0.001)
-    #
     keys = key_check()
     if 'T' in keys:
         joystickPosition = vj.generateJoystickPosition(wAxisX=16000, wAxisY=16000)
