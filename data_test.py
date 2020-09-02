@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 allow_pickle = True
-train_data = np.load('training_data.npy', allow_pickle=True)
+train_data = np.load('3pv_data.npy', allow_pickle=True)
 images = []
 steer = []
 for data in train_data:
@@ -18,4 +18,4 @@ plt.imshow(X_train[0])
 plt.show()
 print(len(X_train))
 y_train = np.array(steer)
-print(max(y_train))
+print(y_train)
