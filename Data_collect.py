@@ -56,12 +56,9 @@ print("Controller Name: ", name)
 while True:
     if not pause:
         screen = grab_screen(region=(0, 280, 800, 430))
-        screen = cv2.resize(screen, (100, 100))
+        screen = cv2.resize(screen, (200, 200))
         cv2.imshow('screen', screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2HLS)
-        screen = screen/255 - 0.2
-
+        screen = cv2.resize(screen, (100, 100))
         curr_time = time.time()
         FPS = 1/(curr_time - prev_time)
         prev_time = time.time()
