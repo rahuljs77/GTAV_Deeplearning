@@ -22,14 +22,13 @@ images = []
 steer = []
 for data in train_data:
     source_image = data[0]
-    new_image = source_image
+    new_image = cv2.resize(source_image, (200, 66))
     new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
     new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
     new_image = new_image/255 - 0.1
     images.append(new_image)
     steering_angle = data[1]
     steer.append(steering_angle)
-
 
 X_train = np.array(images)
 print(len(X_train))
@@ -39,32 +38,12 @@ X_train, y_train = shuffle(X_train, y_train)
 
 epochs = 10
 batch_size = 200
-# input_size = 64
-activation_relu = 'relu'
 
-# model = Sequential()
-# model.add(Lambda(lambda x: x/255.0 - 0.1, input_shape=(66, 200, 3)))
-# # model.add(Lambda(lambda y: tf.image.resize(y, (66, 200))))
-# # model.add(Lambda(lambda z: preprocess(z)))
-# # model.add(Cropping2D(cropping=((70, 25), (0, 0))))
-# model.add(Conv2D(24, (5, 5), activation='relu'))
-# model.add(Conv2D(36, (5, 5), activation='relu'))
-# model.add(Conv2D(48, (5, 5), activation='relu'))
-# model.add(Conv2D(64, (3, 3), activation='relu'))
-# model.add(Conv2D(64, (3, 3), activation='relu'))
-# model.add(Dropout(0.4))
-# model.add(Flatten())
-# model.add(Dense(100, activation='relu'))
-# model.add(Dropout(0.2))
-# model.add(Dense(50, activation='relu'))
-# model.add(Dense(10, activation='relu'))
-# model.add(Dense(1))
-
-vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 3))
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(66, 200, 3))
 for layer in vgg_model.layers:
     layer.trainable = False
 
-data_input = Input(shape=(100, 100, 3))
+data_input = Input(shape=(66, 200, 3))
 vgg = vgg_model(data_input)
 drop_1 = Dropout(0.2)(vgg)
 flat_1 = Flatten()(drop_1)
@@ -85,7 +64,7 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('3pv_model2.h5')
+model.save('3pv_model.h5')
 print()
 print('model saved')
 
