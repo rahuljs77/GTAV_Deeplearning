@@ -64,17 +64,17 @@ while True:
         vj.open()
         btn = 1
         screen = grab_screen(region=(0, 280, 800, 430))
-        screen = cv2.resize(screen, (100, 100))
+        screen = cv2.resize(screen, (200, 66))
         # cv2.imshow('screen', screen)
         # screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2YUV)
         screen = (screen / 255 - 0.2)
 
         # steering_angle = float(model.predict(screen[None, :, :, :], batch_size=1))
         # steering_correction = int(steering_angle * 16000) * gain
         # print(steering_correction)
 
-        joystickPosition = vj.generateJoystickPosition(wAxisZ=22000)
+        joystickPosition = vj.generateJoystickPosition(wAxisX=16000, wAxisZ=22000)
         vj.update(joystickPosition)
         time.sleep(0.01)
         vj.sendButtons(0)
