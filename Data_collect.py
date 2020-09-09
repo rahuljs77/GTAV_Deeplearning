@@ -16,10 +16,10 @@ prev_time = time.time()
 image_data = []
 steer_data = []
 
-fpv = False
+tf = False
 
-if fpv:
-    file = 'fpv_data.npy'
+if tf:
+    file = 'tf_data.npy'
     if os.path.isfile(file):
         print('File exists, loading previous data!')
         training_data = list(np.load(file, allow_pickle=True))
@@ -27,7 +27,7 @@ if fpv:
         print('File does not exist, starting fresh!')
         training_data = []
 else:
-    file = '3pv_data.npy'
+    file = 'data.npy'
     if os.path.isfile(file):
         print('File exists, loading previous data!')
         training_data = list(np.load(file, allow_pickle=True))
