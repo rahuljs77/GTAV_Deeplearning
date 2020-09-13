@@ -29,8 +29,8 @@ while True:
     if not pause:
         vj.open()
         btn = 1
-        screen = grab_screen(region=(0, 130, 800, 630))
-        screen = cv2.resize(screen, (100, 100))
+        screen = grab_screen(region=(1170, 290, 1870, 430))
+        screen = cv2.resize(screen, (200, 66))
         screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
         screen = cv2.GaussianBlur(screen, (3, 3), 0)
         screen = screen/255 - 0.1
@@ -38,12 +38,12 @@ while True:
         control = (model.predict(screen[None, :, :, :], batch_size=1))
         print(control)
         steering_angle = control[0][0]
-        throttle = control[0][1]
+        throttle = -control[0][1]
         steering_correction = (steering_angle * 16000)
-        steering_correction = int(steering_correction) * s_gain
+        steering_correction = int(steering_correction) * 5
 
-        throttle_correction = throttle*32000
-        throttle_correction = int(throttle_correction) * t_gain
+        throttle_correction = throttle*32000*2
+        throttle_correction = int(throttle_correction)
 
         if throttle_correction > 0:
             forward = throttle_correction
