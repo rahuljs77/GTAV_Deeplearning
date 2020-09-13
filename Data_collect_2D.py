@@ -38,8 +38,8 @@ print("Controller Name: ", name)
 
 while True:
     if not pause:
-        screen = grab_screen(region=(0, 130, 800, 630))
-        screen = cv2.resize(screen, (200, 200))
+        screen = grab_screen(region=(1170, 290, 1870, 430))
+        screen = cv2.resize(screen, (400, 400))
         cv2.imshow('screen', screen)
         screen = cv2.resize(screen, (100, 100))
         curr_time = time.time()
