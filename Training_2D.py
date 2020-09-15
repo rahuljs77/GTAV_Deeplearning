@@ -11,7 +11,6 @@ from sklearn.utils import shuffle
 import cv2
 
 train_data = np.load('tf_data.npy', allow_pickle=True)
-train_data2 = np.load("data.npy", allow_pickle=True)
 
 images = []
 controls = []
@@ -20,32 +19,28 @@ print(len(train_data))
 for data in train_data:
     i = i+1
     source_image = data[0]
-    new_image = cv2.resize(source_image, (200, 66))
+    new_image = cv2.resize(source_image, (100, 100))
     new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
     new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
     new_image = new_image/255 - 0.1
     control = data[1]
-    if control[1] < -0.6:
-        if i % 2 == 0:
+
+    if control[1] <= -0.5 or control[1] == 0:
+        if control[1] == 0.5:
+            pass
+        elif i % 2 == 0:
             images.append(new_image)
             controls.append(control)
         else:
             pass
-    else:
+    elif control[1] > 0.2:
         images.append(new_image)
+        flip_image = np.fliplr(new_image)
+        images.append(flip_image)
         controls.append(control)
-# i = 0
-# for data in train_data2:
-#     i += 1
-#     if i % 100 == 0:
-#         source_image = data[0]
-#         new_image = cv2.resize(source_image, (100, 100))
-#         new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
-#         new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
-#         new_image = new_image/255 - 0.1
-#         images.append(new_image)
-#         control = [data[1], -0.4]
-#         controls.append(control)
+        flip_control = [-control[0], control[1]]
+        controls.append(flip_control)
+
 
 X_train = np.array(images)
 y_train = np.array(controls)
@@ -56,11 +51,11 @@ print("the image is being trained on {} samples".format(len(X_train)))
 epochs = 10
 batch_size = 64
 
-vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(66, 200, 3))
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 3))
 for layer in vgg_model.layers:
     layer.trainable = False
 
-data_input = Input(shape=(66, 200, 3))
+data_input = Input(shape=(100, 100, 3))
 vgg = vgg_model(data_input)
 drop_1 = Dropout(0.2)(vgg)
 flat_1 = Flatten()(drop_1)
@@ -81,6 +76,6 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('tf_model.h5')
+model.save('tf_model2.h5')
 print()
 print('model saved')
