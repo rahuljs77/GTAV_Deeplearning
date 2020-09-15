@@ -49,6 +49,8 @@ while True:
         steering_angle = controller.get_axis(0)
         throttle = controller.get_axis(2)
         throttle = round(throttle, 2)
+        if throttle < -0.5:
+            throttle = -0.49
         steering_angle = round(steering_angle, 2)
         print('steering_angle = {}, throttle = {}'.format(steering_angle, throttle))
         control = [steering_angle, throttle]
