@@ -7,7 +7,7 @@ from tensorflow.keras.models import load_model
 import cv2
 
 s_gain = 2
-t_gain = 2
+t_gain = 1.5
 
 vj = vJoy()
 pause = False
@@ -30,7 +30,7 @@ while True:
         vj.open()
         btn = 1
         screen = grab_screen(region=(1170, 290, 1870, 430))
-        screen = cv2.resize(screen, (200, 66))
+        screen = cv2.resize(screen, (100, 100))
         screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
         screen = cv2.GaussianBlur(screen, (3, 3), 0)
         screen = screen/255 - 0.1
@@ -38,19 +38,21 @@ while True:
         control = (model.predict(screen[None, :, :, :], batch_size=1))
         print(control)
         steering_angle = control[0][0]
-        throttle = -control[0][1]
         steering_correction = (steering_angle * 16000)
-        steering_correction = int(steering_correction) * 5
+        steering_correction = int(steering_correction) * 3
 
-        throttle_correction = throttle*32000*2
-        throttle_correction = int(throttle_correction)
-
-        if throttle_correction > 0:
-            forward = throttle_correction
+        throttle = -control[0][1]
+        if throttle > 0:
+            forward = int(throttle*32000*t_gain)
             backward = 0
-        else:
+        elif throttle <= 0:
             forward = 0
-            backward = throttle_correction
+            backward = int(throttle*32000*t_gain)
+        elif throttle < 0.15:
+            forward = 0
+            backward = 32000
+        else:
+            pass
 
         joystickPosition = vj.generateJoystickPosition(wAxisX=16000 + steering_correction, wAxisZ=forward, wAxisZRot=backward)
         vj.update(joystickPosition)
