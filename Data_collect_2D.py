@@ -11,7 +11,7 @@ import time
 
 prev_time = time.time()
 
-file = 'tf_data.npy'
+file = 'data/tf_data.npy'
 if os.path.isfile(file):
     train_data = list(np.load(file, allow_pickle=True))
 else:
@@ -47,21 +47,21 @@ while True:
         prev_time = time.time()
         pygame.event.pump()
         steering_angle = controller.get_axis(0)
-        throttle = controller.get_axis(2)
+        throttle = -controller.get_axis(2)
         throttle = round(throttle, 2)
-        if throttle < -0.5:
-            throttle = -0.49
+        if throttle > 0.8:
+            throttle = 0.8
         steering_angle = round(steering_angle, 2)
         print('steering_angle = {}, throttle = {}'.format(steering_angle, throttle))
         control = [steering_angle, throttle]
         train_data.append([screen, control])
         # print("FPS:", FPS)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            print(("{} images collected".format(len(train_data))))
-            np.save(file, train_data)
-            print("File saved!!")
-            cv2.destroyAllWindows()
-            break
+        # if cv2.waitKey(25) & 0xFF == ord('q'):
+        #     print(("{} images collected".format(len(train_data))))
+        #     np.save(file, train_data)
+        #     print("File saved!!")
+        #     cv2.destroyAllWindows()
+        #     break
 
     keys = key_check()
     if 'T' in keys:
@@ -72,4 +72,7 @@ while True:
         else:
             print('Pause!')
             pause = True
+            print(("{} images collected".format(len(train_data))))
+            np.save(file, train_data)
+            print("File saved!!")
             time.sleep(1)
