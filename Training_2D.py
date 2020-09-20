@@ -5,12 +5,13 @@ from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from sklearn.utils import shuffle
 
 import cv2
 
-train_data = np.load('tf_data.npy', allow_pickle=True)
+train_data = np.load('data/tf_data.npy', allow_pickle=True)
 
 images = []
 controls = []
@@ -20,36 +21,48 @@ for data in train_data:
     i = i+1
     source_image = data[0]
     new_image = cv2.resize(source_image, (100, 100))
-    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
+    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2YUV)
     new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
     new_image = new_image/255 - 0.1
     control = data[1]
 
-    if control[1] <= -0.5 or control[1] == 0:
-        if control[1] == 0.5:
-            pass
-        elif i % 2 == 0:
+    if control[1] == 0.0 or control[1] == 0.5:
+        if i % 2 == 0:
             images.append(new_image)
             controls.append(control)
         else:
             pass
-    elif control[1] > 0.2:
-        images.append(new_image)
+    elif control[1] < 0:
         flip_image = np.fliplr(new_image)
-        images.append(flip_image)
-        controls.append(control)
         flip_control = [-control[0], control[1]]
+        images.append(new_image)
+        controls.append(control)
+        images.append(flip_image)
         controls.append(flip_control)
+    else:
+        images.append(new_image)
+        controls.append(control)
 
 
-X_train = np.array(images)
+    # control[1] < -0.2:
+    #     images.append(new_image)
+    #     flip_image = np.fliplr(new_image)
+    #     images.append(flip_image)
+    #     controls.append(control)
+    #     flip_control = [-control[0], control[1]]
+    #     controls.append(flip_control)
+print(len(images))
+X_train = np.array(images, dtype='float16')
+plt.imshow(X_train[500])
+# plt.show()
 y_train = np.array(controls)
+print(y_train[500])
 
 X_train, y_train = shuffle(X_train, y_train)
 
 print("the image is being trained on {} samples".format(len(X_train)))
 epochs = 10
-batch_size = 64
+batch_size = 128
 
 vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 3))
 for layer in vgg_model.layers:
@@ -76,6 +89,6 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('tf_model2.h5')
+model.save('models/tf_model1.h5')
 print()
 print('model saved')
