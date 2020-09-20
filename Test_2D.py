@@ -6,6 +6,7 @@ from grabscreen import grab_screen
 from tensorflow.keras.models import load_model
 import cv2
 
+prev_time = time.time()
 s_gain = 2
 t_gain = 1.5
 
@@ -24,31 +25,35 @@ wAxisZRot = 0
 keys = key_check()
 ultimate_release()
 
-model = load_model("tf_model.h5")
+model = load_model("models/tf_model1.h5")
 while True:
     if not pause:
         vj.open()
         btn = 1
         screen = grab_screen(region=(1170, 290, 1870, 430))
         screen = cv2.resize(screen, (100, 100))
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2HLS)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2YUV)
         screen = cv2.GaussianBlur(screen, (3, 3), 0)
         screen = screen/255 - 0.1
 
+        curr_time = time.time()
+        FPS = 1 / (curr_time - prev_time)
+        prev_time = time.time()
+
         control = (model.predict(screen[None, :, :, :], batch_size=1))
-        print(control)
+        print(control, FPS)
         steering_angle = control[0][0]
         steering_correction = (steering_angle * 16000)
-        steering_correction = int(steering_correction) * 3
+        steering_correction = int(steering_correction * s_gain)
 
-        throttle = -control[0][1]
+        throttle = control[0][1]
         if throttle > 0:
             forward = int(throttle*32000*t_gain)
             backward = 0
+        # elif throttle <= 0:
+        #     forward = 0
+        #     backward = int(throttle*32000*t_gain)
         elif throttle <= 0:
-            forward = 0
-            backward = int(throttle*32000*t_gain)
-        elif throttle < 0.15:
             forward = 0
             backward = 32000
         else:
