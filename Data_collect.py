@@ -1,6 +1,4 @@
 from grabscreen import grab_screen
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import math
 import pygame
 import pyvjoy
@@ -16,31 +14,20 @@ prev_time = time.time()
 image_data = []
 steer_data = []
 
-tf = False
 
-if tf:
-    file = 'tf_data.npy'
-    if os.path.isfile(file):
-        print('File exists, loading previous data!')
-        training_data = list(np.load(file, allow_pickle=True))
-    else:
-        print('File does not exist, starting fresh!')
-        training_data = []
+file = 'data.npy'
+if os.path.isfile(file):
+    train_data = list(np.load(file, allow_pickle=True))
 else:
-    file = 'data.npy'
-    if os.path.isfile(file):
-        print('File exists, loading previous data!')
-        training_data = list(np.load(file, allow_pickle=True))
-    else:
-        print('File does not exist, starting fresh!')
-        training_data = []
+    train_data = []
 
-print("code starts in..")
+print("recording starts in..")
 time.sleep(0.5)
-for i in range(0, 4):
+for i in range(0, 3):
     k = 3 - i
     print(k)
     time.sleep(1)
+
 pause = False
 
 #  Joystick Controller setup
@@ -66,11 +53,11 @@ while True:
         steering_angle = controller.get_axis(0)
         steering_angle = round(steering_angle, 2)
         print(steering_angle)
-        training_data.append([screen, steering_angle])
+        train_data.append([screen, steering_angle])
         # print("FPS:", FPS)
         if cv2.waitKey(25) & 0xFF == ord('q'):
-            print(("{} images collected".format(len(training_data))))
-            np.save(file, training_data)
+            print(("{} images collected".format(len(train_data))))
+            np.save(file, train_data)
             print("File saved!!")
             cv2.destroyAllWindows()
             break

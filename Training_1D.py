@@ -17,12 +17,12 @@ allow_pickle = True
 if fpv:
     train_data = np.load('fpv_data.npy', allow_pickle=True)
 else:
-    train_data = np.load('3pv_data.npy', allow_pickle=True)
+    train_data = np.load('data.npy', allow_pickle=True)
 images = []
 steer = []
 for data in train_data:
     source_image = data[0]
-    new_image = cv2.resize(source_image, (200, 66))
+    new_image = cv2.resize(source_image, (100, 100))
     new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
     new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
     new_image = new_image/255 - 0.1
@@ -39,11 +39,11 @@ X_train, y_train = shuffle(X_train, y_train)
 epochs = 10
 batch_size = 200
 
-vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(66, 200, 3))
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(100, 100, 3))
 for layer in vgg_model.layers:
     layer.trainable = False
 
-data_input = Input(shape=(66, 200, 3))
+data_input = Input(shape=(100, 100, 3))
 vgg = vgg_model(data_input)
 drop_1 = Dropout(0.2)(vgg)
 flat_1 = Flatten()(drop_1)
@@ -64,7 +64,7 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('3pv_model.h5')
+model.save('model.h5')
 print()
 print('model saved')
 

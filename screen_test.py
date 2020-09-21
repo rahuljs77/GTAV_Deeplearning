@@ -13,18 +13,18 @@ import time
 
 print("code starts in..")
 time.sleep(0.5)
-for i in range(0, 4):
+for i in range(0, 3):
     k = 3 - i
     print("{}".format(k))
     time.sleep(1)
 pause = False
 while True:
     if not pause:
-        screen = grab_screen(region=(0, 280, 800, 430))
-        screen = cv2.resize(screen, (200, 66))
+        screen = grab_screen(region=(1170, 290, 1870, 430))
+        screen = cv2.resize(screen, (500, 400))
         screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-        screen = cv2.cvtColor(screen, cv2.COLOR_RGB2YUV)
-        screen = screen / 255 - 0.2
+        # screen = cv2.cvtColor(screen, cv2.COLOR_RGB2YUV)
+        screen = screen / 255
         cv2.imshow('screen', screen)
         screen = cv2.resize(screen, (100, 100))
 
