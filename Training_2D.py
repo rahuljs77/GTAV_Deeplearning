@@ -13,50 +13,55 @@ import cv2
 
 train_data = np.load('data/tf_data.npy', allow_pickle=True)
 
+noise = 0.05
 images = []
 controls = []
 i = 0
+forward = 0
+backward = 0
+normal = 0
 print(len(train_data))
 for data in train_data:
     i = i+1
     source_image = data[0]
     new_image = cv2.resize(source_image, (100, 100))
-    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2YUV)
+    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2HLS)
     new_image = cv2.GaussianBlur(new_image, (3, 3), 0)
     new_image = new_image/255 - 0.1
     control = data[1]
 
     if control[1] == 0.0 or control[1] == 0.5:
-        if i % 2 == 0:
+        if i % 1 == 0:
+            forward += 1
             images.append(new_image)
             controls.append(control)
         else:
             pass
-    elif control[1] < 0:
-        flip_image = np.fliplr(new_image)
-        flip_control = [-control[0], control[1]]
-        images.append(new_image)
-        controls.append(control)
-        images.append(flip_image)
-        controls.append(flip_control)
+    elif -0.3 > control[0] > 0.3 or control[1] < 0:
+        if i % 1 == 0:
+            backward += 1
+            copy_image = new_image - 0.05
+            if control[0] < 0:
+                copy_control = [control[0] - noise, control[1]]
+            else:
+                copy_control = [control[0] + noise, control[1]]
+            images.append(new_image)
+            controls.append(control)
+            images.append(copy_image)
+            controls.append(copy_control)
     else:
-        images.append(new_image)
-        controls.append(control)
+        if i % 2 == 0:
+            normal += 1
+            images.append(new_image)
+            controls.append(control)
 
+print("total images:", len(images))
+print("forward filter", forward)
+print("backward filter", backward)
+print("normal images", normal)
 
-    # control[1] < -0.2:
-    #     images.append(new_image)
-    #     flip_image = np.fliplr(new_image)
-    #     images.append(flip_image)
-    #     controls.append(control)
-    #     flip_control = [-control[0], control[1]]
-    #     controls.append(flip_control)
-print(len(images))
 X_train = np.array(images, dtype='float16')
-plt.imshow(X_train[500])
-# plt.show()
 y_train = np.array(controls)
-print(y_train[500])
 
 X_train, y_train = shuffle(X_train, y_train)
 
@@ -89,6 +94,6 @@ model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=epochs, v
 print()
 print('training complete')
 
-model.save('models/tf_model1.h5')
+model.save('models/tf_model.h5')
 print()
 print('model saved')
