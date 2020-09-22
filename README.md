@@ -1,4 +1,4 @@
-# GTAV_Deeplearning
+# GTA V Deep Learning
 In this project I have used deep learning techniques to train a mulit-variant regression network to drive autonomously
 in the popular game Grand Theft Auto V. The deep learning model used was based on Vgg-16 pre-trained on imagenet data.
 The final layer was chopped off and 4 fully connected layers with dropout layers in between were added. The model takes
@@ -33,7 +33,7 @@ Adam optimizer was the selected optimizer and mean squared error was used as los
 
 + The model along with the trained weights is saved in a .h5 file.
 
-# Deploying the model:
+## Deploying the model:
 + The following points include about how you can implement this model on your own machine.
 
 + #### Minimun System requirements:
