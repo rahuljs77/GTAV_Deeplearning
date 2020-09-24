@@ -36,7 +36,7 @@ Adam optimizer was the selected optimizer and mean squared error was used as los
 ## Deploying the model:
 + The following points include about how you can implement this model on your own machine.
 
-+ #### Minimun System requirements:
++ #### Minimum System requirements:
   + Nvidia graphic card (gtx 960m or higher)
   + 4 core intel/Amd CPU
   + 16gb ram
