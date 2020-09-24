@@ -1,3 +1,4 @@
+![tgsfrF](https://user-images.githubusercontent.com/60246451/94188349-42975a00-fe77-11ea-873a-cc972f24aa89.PNG)
 # GTA V Deep Learning
 In this project I have used deep learning techniques to train a mulit-variant regression network to drive autonomously
 in the popular game Grand Theft Auto V. The deep learning model used was based on Vgg-16 pre-trained on imagenet data.
