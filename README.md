@@ -67,7 +67,7 @@ Adam optimizer was the selected optimizer and mean squared error was used as los
     + Vehicle spawning > open wheel vehicle > select the second option (to load the f1 car) make sure it's red.
    + Now head to this location in the map.
    
-   ![Screenshot 2020-09-24 130532](https://user-images.githubusercontent.com/60246451/94187964-b71dc900-fe76-11ea-94c7-64dffb057271.png)
+     ![Screenshot 2020-09-24 130532](https://user-images.githubusercontent.com/60246451/94187964-b71dc900-fe76-11ea-94c7-64dffb057271.png)
    
    + Open anaconda terminal and conda activate the package where tensorflow gpu is installed
    + In the terminal head to the directory where the repo has been cloned and run Test_2D.py, wait till you see the steering and throttle values are printed
