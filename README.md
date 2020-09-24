@@ -6,6 +6,8 @@ The final layer was chopped off and 4 fully connected layers with dropout layers
 (100 x 100 x 3) images a input and gives 2 values, the steering and the throttle as the output. This model converges faster
 and has lower trainable parameters compared to Nvidia's end to end [architecture.](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
 
+
+
 ## Training Data:
 + In order to collect the training data, the game was run in windowed mode in (800 x 600) resolution. Using python the screen and 
 the corresponding input form the controller (left analogue stick placement for steering and right and left triggers for throttle) were recorded at 30fps
