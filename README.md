@@ -61,10 +61,13 @@ Adam optimizer was the selected optimizer and mean squared error was used as los
     + Weather > clear sunny, freeze weather > enabled (also equally important)
     + Vehicle spawning > open wheel vehicle > select the second option (to load the f1 car) make sure it's red.
    + Now head to this location in the map.
+   
+   ![Screenshot 2020-09-24 130532](https://user-images.githubusercontent.com/60246451/94187964-b71dc900-fe76-11ea-94c7-64dffb057271.png)
+   
    + Open anaconda terminal and conda activate the package where tensorflow gpu is installed
    + In the terminal head to the directory where the repo has been cloned and run Test_2D.py, wait till you see the steering and throttle values are printed
-   + Press P to pause and then click the GTA V window
-   + Press P to unpause the model and see the neural network in action!
+   + Press T to pause and then click the GTA V window
+   + Press T to unpause the model and see the neural network in action!
  + #### Debugging:
    + Incase of any issues run the screen_test.py and joystick_control_test.py to resolve screen recording/virtual controller issues
  
