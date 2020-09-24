@@ -57,7 +57,9 @@ while True:
 
         control = (model.predict(screen[None, :, :, :], batch_size=1))  # Predicted steering and throttle value
 
-        print("Steering angle: {}   Throttle: {}   FPS: {}".format(control[0][0], control[0][1], FPS))
+        print("  ")
+        print("\rSteering angle: {}   Throttle: {}   FPS: {}".format(int(control[0][0]*100), int(control[0][1]*100),
+                                                                     FPS), end="")
 
         # Converting the steering and throttle values to corresponding joystick axis values
 
@@ -71,11 +73,11 @@ while True:
         else:
             pass
 
-        if throttle > 0.1:
-            forward = int(throttle*32000*1.5)
+        if throttle > 0:
+            forward = int(throttle*32000*1.6)
             backward = 0
 
-        elif 0 < throttle <= 0.1:
+        elif -0.3 < throttle <= 0:
             forward = 0
             backward = int(throttle*32000*t_gain)
         else:
@@ -90,15 +92,18 @@ while True:
         vj.sendButtons(0)
 
     keys = key_check()
-    if 'P' in keys:
+    if 'T' in keys:
         joystickPosition = vj.generateJoystickPosition(wAxisX=16000, wAxisY=16000)
         vj.update(joystickPosition)
         vj.sendButtons(0)
         if pause:
             pause = False
             print('Play!')
+            time.sleep(1)
         else:
+            print(" ")
             print('Pause!')
             pause = True
+            time.sleep(1)
 
 
