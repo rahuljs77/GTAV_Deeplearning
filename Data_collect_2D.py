@@ -9,6 +9,9 @@ import os
 import cv2
 import time
 
+"""
+    The following code records the gameplay and the corresponding controller input and stores them into a .npy file
+"""
 prev_time = time.time()
 
 file = 'data/tf_data.npy'
@@ -38,13 +41,18 @@ print("Controller Name: ", name)
 
 while True:
     if not pause:
+        # Screen recording data
         screen = grab_screen(region=(1170, 290, 1870, 430))
         screen = cv2.resize(screen, (400, 400))
         cv2.imshow('screen', screen)
         screen = cv2.resize(screen, (100, 100))
+
+        # FPS
         curr_time = time.time()
         FPS = 1 / (curr_time - prev_time)
         prev_time = time.time()
+
+        # Controller input
         pygame.event.pump()
         steering_angle = controller.get_axis(0)
         throttle = -controller.get_axis(2)
@@ -55,24 +63,16 @@ while True:
         print('steering_angle = {}, throttle = {}'.format(steering_angle, throttle))
         control = [steering_angle, throttle]
         train_data.append([screen, control])
-        # print("FPS:", FPS)
-        # if cv2.waitKey(25) & 0xFF == ord('q'):
-        #     print(("{} images collected".format(len(train_data))))
-        #     np.save(file, train_data)
-        #     print("File saved!!")
-        #     cv2.destroyAllWindows()
-        #     break
 
     keys = key_check()
-    if 'T' in keys:
+    if 'P' in keys:
         if pause:
             pause = False
-            print('Play!')
-            time.sleep(1)
+            print('Playing')
         else:
-            print('Pause!')
             pause = True
+            print('Paused!')
             print(("{} images collected".format(len(train_data))))
             np.save(file, train_data)
             print("File saved!!")
-            time.sleep(1)
+
