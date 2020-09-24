@@ -52,6 +52,8 @@ Adam optimizer was the selected optimizer and mean squared error was used as los
   + Clone the repository into your C drive
   + Install the Vjoy drivers
   + Open X360ce and setup as shown.
+  
+    ![Capture](https://user-images.githubusercontent.com/60246451/94188133-f1876600-fe76-11ea-9561-1ad08050a6b6.PNG)
     
   + Open GTA V in windowed mode at 800 X 600 resolution and place the window on top right corner of your screen
   + Open the GTA V mod menu by pressing 'F3' and make the following changes (navigate the menu using numpad)
