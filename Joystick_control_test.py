@@ -1,7 +1,14 @@
-from vjoy import vJoy, test, ultimate_release
+from vjoy import vJoy, ultimate_release
 import numpy as np
 import time
 from getKeys import key_check
+
+"""
+    Run this code to check the connection between the virtual controller and the game.
+    The vehicle should keep making circles in counter clock direction when the connection is successful
+    ** Note that you need to press P to break the connection rather than terminating the code, as this could result in 
+    crashing the vjoy driver  
+"""
 
 vj = vJoy()
 
@@ -15,15 +22,12 @@ wAxisXRot = 16393
 wAxisYRot = 16393
 wAxisZRot = 0
 
-throttle = 0
-turn = 0.9
 keys = key_check()
 ultimate_release()
 
 while True:
     vj.open()
     btn = 1
-
     joystickPosition = vj.generateJoystickPosition(wAxisX=12000, wAxisZ=32000, wAxisZRot=0)
     vj.update(joystickPosition)
     print("running")
