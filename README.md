@@ -6,6 +6,8 @@ The final layer was chopped off and 4 fully connected layers with dropout layers
 (100 x 100 x 3) images a input and gives 2 values, the steering and the throttle as the output. This model converges faster
 and has lower trainable parameters compared to Nvidia's end to end [architecture.](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
 
+Check this [link](https://www.youtube.com/watch?v=tUFN5y6eTRo) for demo video
+
 ![dfsdfscdscsccds](https://user-images.githubusercontent.com/60246451/94188799-e4b74200-fe77-11ea-9e54-9536446722bc.PNG)
 
 ## Training Data:
